@@ -19,7 +19,7 @@ st.set_page_config(page_title="감성분석", page_icon="📈")
 # https://huggingface.co/models pre trained models of huggling face ( models)
 
 #https://docs.streamlit.io/en/stable/api.html#display-interactive-widgets ( Streamlit Documentation)
-
+com=''
 st.title('ESG 긍/부정 분류') #title
 target=''
 def pdf_to_txt(filename):
@@ -97,12 +97,12 @@ if upload_file is not None:
             target2 = target
 
             target2 = list(filter(None, target2))
-        sentence_result=nlp_sa(target2)
-        for i in range(len(target2)):
-            if sentence_result[i]['label'] == '중립':
-                result_text = (target2[i],'중립')
-            elif sentence_result[i]['label'] == '긍정':
-                result_text = (target2[i],'긍정')
-            else:
-                result_text = (target2[i],'부정')
-            st.write(annotated_text(result_text))
+sentence_result=nlp_sa(target2)
+for i in range(len(target2)):
+    if sentence_result[i]['label'] == '중립':
+        result_text = (target2[i],'중립')
+    elif sentence_result[i]['label'] == '긍정':
+        result_text = (target2[i],'긍정')
+    else:
+        result_text = (target2[i],'부정')
+    st.write(annotated_text(result_text))

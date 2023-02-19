@@ -100,14 +100,14 @@ if upload_file is not None:
 
             target2 = list(filter(None, target2))
 
-        sentence_result=nlp_sa(target2)
-        for i in range(len(target2)):
-            if sentence_result[i]['label'] == 'N':
-                result_text = (target2[i],'중립')
-            elif sentence_result[i]['label'] == 'E':
-                result_text = (target2[i],'환경')
-            elif sentence_result[i]['label'] == 'S':
-                result_text = (target2[i],'사회')
-            else:
-                result_text = (target2[i],'지배구조')
-            st.write(annotated_text(result_text))
+    sentence_result=nlp_sa(target2)
+    for i in range(len(target2)):
+        if sentence_result[i]['label'] == 'N':
+            result_text = (target2[i],'중립')
+        elif sentence_result[i]['label'] == 'E':
+            result_text = (target2[i],'환경')
+        elif sentence_result[i]['label'] == 'S':
+            result_text = (target2[i],'사회')
+        else:
+            result_text = (target2[i],'지배구조')
+        st.write(annotated_text(result_text))
