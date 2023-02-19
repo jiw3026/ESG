@@ -1,34 +1,29 @@
-import pandas as pd
-import joblib
-import streamlit as st
-import sys
-from transformers import pipeline
-from annotated_text import annotated_text
+
+# Core Pkgs
+import streamlit as st 
+import os
 
 import pdfminer
 from pdfminer.high_level import extract_text
+from keybert import KeyBERT
+from sentence_transformers import SentenceTransformer
+import pandas as pd
+import pandas as pd
+import numpy as np
 import re, html
 from bs4 import BeautifulSoup as BS, NavigableString, SoupStrainer
 from html_table_parser import parser_functions
 import itertools
 import os
 
-st.set_page_config(page_title="감성분석", page_icon="📈")
+st.set_page_config(page_title="키워드 추출", page_icon="📈")
 
-
-# https://huggingface.co/models pre trained models of huggling face ( models)
-
-#https://docs.streamlit.io/en/stable/api.html#display-interactive-widgets ( Streamlit Documentation)
-
-st.title('ESG 긍/부정 분류') #title
-target=''
-def pdf_to_txt(filename):
-    text = extract_text(filename)
-    return text.split('.')
-# defining variables used as input
-nlp_sa = pipeline('text-classification',model='keonju/deberta_senti')
+st.title('주요 키워드 추출') #title
+sentence_model = SentenceTransformer("distiluse-base-multilingual-cased-v1")
+kw_model = KeyBERT(model=sentence_model)
 
 upload_file = st.file_uploader(label='파일을 업로드해주세요')
+# defining variables used as input
 
 def save_chap(data_xml, type='사업개요'):  # 사업의 개요요
 
@@ -74,35 +69,38 @@ def save_chap(data_xml, type='사업개요'):  # 사업의 개요요
 
     return com,lis
 
+def pdf_to_txt(filename):
+    text = extract_text(filename)
+    text = text.replace('\n', '')
+
+    return text.split('.')
+
+
+target=''
 if upload_file is not None:
     type=upload_file.type
 
-    target2=''
-    if 'xml' in type:
-        report = st.selectbox('보고싶은 보고서를 클릭해주세요', ['사업개요', '경영의견'])
-        if st.button('Run'):
+    if st.button('Run'):
+        if 'xml' in type:
+            report = st.selectbox('보고싶은 보고서를 클릭해주세요', ['사업개요', '경영의견'])
+
             com, target = save_chap(upload_file,report)
+            target = ' '.join(target)
 
-        st.title(com)
-        target2 = []
-        for i in target:
-            c=i.split('.')
-            for z in c:
-                target2.append(z)
+            st.title(com)
+            st.markdown(target)
 
-    if 'pdf' in type:
-        if st.button('Run'):
+        if 'pdf' in type:
 
             target = pdf_to_txt(upload_file)
-            target2 = target
+            st.markdown(target)
 
-            target2 = list(filter(None, target2))
-        sentence_result=nlp_sa(target2)
-        for i in range(len(target2)):
-            if sentence_result[i]['label'] == '중립':
-                result_text = (target2[i],'중립')
-            elif sentence_result[i]['label'] == '긍정':
-                result_text = (target2[i],'긍정')
-            else:
-                result_text = (target2[i],'부정')
-            st.write(annotated_text(result_text))
+
+
+    keywords=kw_model.extract_keywords(target, keyphrase_ngram_range=(1, 1), stop_words=None)
+
+    st.metric("Keyword_1", keywords[0][0], keywords[0][1])
+    st.metric("Keyword_2", keywords[1][0], keywords[1][1])
+    st.metric("Keyword_3",keywords[2][0], keywords[2][1])
+    st.metric("Keyword_4", keywords[3][0], keywords[3][1])
+    st.metric("Keyword_5", keywords[4][0], keywords[4][1])

@@ -5,31 +5,32 @@ import sys
 from transformers import pipeline
 from annotated_text import annotated_text
 
-import pdfminer
-from pdfminer.high_level import extract_text
 import re, html
 from bs4 import BeautifulSoup as BS, NavigableString, SoupStrainer
 from html_table_parser import parser_functions
 import itertools
 import os
 
-st.set_page_config(page_title="감성분석", page_icon="📈")
+import pdfminer
+from pdfminer.high_level import extract_text
+
+st.set_page_config(page_title="ESG 분류", page_icon="📈")
 
 
 # https://huggingface.co/models pre trained models of huggling face ( models)
 
 #https://docs.streamlit.io/en/stable/api.html#display-interactive-widgets ( Streamlit Documentation)
 
-st.title('ESG 긍/부정 분류') #title
-target=''
-def pdf_to_txt(filename):
-    text = extract_text(filename)
-    return text.split('.')
+st.title('ESG 분류 모델') #title
+
 # defining variables used as input
-nlp_sa = pipeline('text-classification',model='keonju/deberta_senti')
+nlp_sa = pipeline('text-classification',model='keonju/kobert_ESG')
 
 upload_file = st.file_uploader(label='파일을 업로드해주세요')
 
+def pdf_to_txt(filename):
+    text = extract_text(filename)
+    return text.split('.')
 def save_chap(data_xml, type='사업개요'):  # 사업의 개요요
 
     parser_d0350 = SoupStrainer("section-1")
@@ -74,6 +75,7 @@ def save_chap(data_xml, type='사업개요'):  # 사업의 개요요
 
     return com,lis
 
+target=''
 if upload_file is not None:
     type=upload_file.type
 
@@ -97,12 +99,15 @@ if upload_file is not None:
             target2 = target
 
             target2 = list(filter(None, target2))
+
         sentence_result=nlp_sa(target2)
         for i in range(len(target2)):
-            if sentence_result[i]['label'] == '중립':
+            if sentence_result[i]['label'] == 'N':
                 result_text = (target2[i],'중립')
-            elif sentence_result[i]['label'] == '긍정':
-                result_text = (target2[i],'긍정')
+            elif sentence_result[i]['label'] == 'E':
+                result_text = (target2[i],'환경')
+            elif sentence_result[i]['label'] == 'S':
+                result_text = (target2[i],'사회')
             else:
-                result_text = (target2[i],'부정')
+                result_text = (target2[i],'지배구조')
             st.write(annotated_text(result_text))

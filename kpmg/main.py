@@ -1,28 +1,17 @@
 import streamlit as st
+from PIL import Image 
 
-st.set_page_config(
-    page_title="Hello",
-    page_icon="👋",
-)
 
-st.write("# Welcome to Streamlit! 👋")
 
-st.sidebar.success("Select a demo above.")
+tab1, tab2, tab3 = st.tabs(['Environment' , 'Social','Governance'])
 
-st.markdown(
-    """
-    Streamlit is an open-source app framework built specifically for
-    Machine Learning and Data Science projects.
-    **👈 Select a demo from the sidebar** to see some examples
-    of what Streamlit can do!
-    ### Want to learn more?
-    - Check out [streamlit.io](https://streamlit.io)
-    - Jump into our [documentation](https://docs.streamlit.io)
-    - Ask a question in our [community
-        forums](https://discuss.streamlit.io)
-    ### See more complex demos
-    - Use a neural net to [analyze the Udacity Self-driving Car Image
-        Dataset](https://github.com/streamlit/demo-self-driving)
-    - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-"""
-)
+with tab1:
+  st.write('기후 변화와 자원고갈의 위협이 커진 만큼, 투자자들은 지속 가능성 이슈를 투자 선택에 반영할 수 있습니다.')
+    
+with tab2:
+  st.write('기업의 인권 보장과 데이터 보호,다양성의 고려,공급망 및 지역사회와의 협력관계 구축에 대한 정보를 알려드립니다.')
+
+with tab3:
+  st.write('환경과 사회 가치를 기업이 실현할 수 있도록 뒷받침하는 투명하고 신뢰도 높은 이사회 구성 및 감사위원회 구축에 대해 알려드립니다.')
+
+  
