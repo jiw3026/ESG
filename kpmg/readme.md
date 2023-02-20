@@ -26,7 +26,7 @@
 
 ```python
 
-pip install requirments.txt
+!pip install requirments.txt
 strealit run main.py
 pdf or xml file upload
 click run
