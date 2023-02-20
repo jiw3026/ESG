@@ -19,3 +19,14 @@
 ## ESG Classification
 
 업로드한 xml이나 pdf 파일의 텍스트 정보를 문장 단위로 E/S/G/중립을 반환합니다.  
+
+
+## 사용법
+
+
+'''python
+pip install requirments.txt
+strealit run main.py
+pdf or xml file upload
+click run
+'''
