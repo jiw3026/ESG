@@ -1,15 +1,4 @@
-# KPMG Ideation Challenge 2023 Octopus
-
 # 공시 자료 내 ESG 분류 및 평가 서비스
-
-## TEAM OCTOPUS
-
-나건주
-노선경
-박지원
-박태하
-지민경
-함문정
 
 ## SKILL
 Python
